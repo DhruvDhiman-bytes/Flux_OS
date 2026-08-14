@@ -15,15 +15,15 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
 
     //allocating pages on the system
     EFI_PHYSICAL_ADDRESS PhysicalAddress = 0;
-    EFI_STATUS AllocatedSpace = system_table->BootServices->AllocatePages(AllocateAnyPages,EfiLoaderCode, 4, &PhyiscalAddress);
+    EFI_STATUS AllocatedSpace = system_table->BootServices->AllocatePages(AllocateAnyPages,EfiLoaderCode, 4, &PhysicalAddress);
 
-    if(AllocateSpace == EFI_SUCCESS) {
+    if(AllocatedSpace == EFI_SUCCESS) {
         Print(L"the amount asked memory is allocated\n");
     }
-    else if (AllocateSpace == EFI_OUT_OF_RESOURCEST) {
+    else if (AllocatedSpace == EFI_OUT_OF_RESOURCEST) {
         Print(L"The amount of memory which was asked is not allocated\n");
     }
-    else if(AllocateSpace == EFI_NOT_FOUND) {
+    else if(AllocatedSpace == EFI_NOT_FOUND) {
         Print(L"The requested page is not found\n");
     }
 
