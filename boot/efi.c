@@ -14,7 +14,11 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
     InitializeLib(image, system_table);
     UINTN MapKey;
     VOID* Buffer = NULL;
-    //allocating the buffer size for the getmemorymap function
+
+    /*
+     * This section does the job of allocating buffer
+     * that which is needed for the working of the system
+     */
     EFI_STATUS AllocatedBuffer = system_table->BootServices->AllocatePool(EfiLoaderCode, 4096, &Buffer);
 
     if(AllocatedBuffer == EFI_SUCCESS) {
@@ -24,7 +28,10 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
         Print(L"The amount of asked buffer is not allocated\n");
     }
 
-    //allocating pages on the system
+    /*
+     * This section does the job of allocating pages
+     * for working of the UEFI for the system
+     */
     EFI_PHYSICAL_ADDRESS PhysicalAddress = 0;
     EFI_STATUS AllocatedSpace = system_table->BootServices->AllocatePages(AllocateAnyPages,EfiBootServicesCode, 4, &PhysicalAddress);
 
@@ -38,7 +45,10 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
         Print(L"The requested page is not found\n");
     }
 
-    // freeing up the allocated memory
+    /*
+     * This section does the job of freeing up the allocated pages
+     * by the function for the working of the system
+     */
     EFI_STATUS FreeSpace = system_table->BootServices->FreePages(PhysicalAddress, 4);
 
     if(FreeSpace == EFI_SUCCESS) {
@@ -51,7 +61,10 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
         Print(L"The page is invalid");
     }
 
-    // freeing up the allocated buffer
+    /*
+     * This section of the code does the job of freeing up the pool
+     * allocated for the buffer side for the working of the project
+     */
     EFI_STATUS FreePool = system_table->BootServices->FreePool(Buffer);
 
     if(FreePool == EFI_SUCCESS) {
