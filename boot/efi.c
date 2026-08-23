@@ -14,6 +14,9 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
     InitializeLib(image, system_table);
     UINTN MapKey;
     VOID* Buffer = NULL;
+    UINTN MemoryMapSize = 4096;
+    UINTN DescriptorSize;
+    UINT32 DescriptorVersion;
 
     /*
      * This section does the job of allocating buffer
@@ -44,6 +47,14 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table) {
     else if(AllocatedSpace == EFI_NOT_FOUND) {
         Print(L"The requested page is not found\n");
     }
+
+    /*
+     * This section of the code requires us for knowing the current memory map after allocation of the system
+     * by the function used like AllocatePages() and AllocatePool() function
+     */
+
+    EFI_STATUS GetMemoryMap_allocated = system_table->BootServices->GetMemoryMap(&MemoryMapSize, (EFI_MEMORY_DESCRIPTOR*) Buffer, &MapKey, &DescriptorSize,
+        &DescriptorVersion);
 
     /*
      * This section does the job of freeing up the allocated pages
